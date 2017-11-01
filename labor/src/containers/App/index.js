@@ -20,6 +20,8 @@ class App extends Component {
     };
   }
 
+  //on mount need to get all employees from reducers
+
   handleSubmit = (event) => {
     event.preventDefault();
     this.clockIn(this.state)
@@ -53,6 +55,8 @@ class App extends Component {
   }
 
   clockIn(employeeInformation){
+    //If employee name is not in reducers(clocked in employees)
+    //Else clock out function
     console.log(employeeInformation)
     return fetch('/api/timecards', {
       method: "POST",
@@ -64,7 +68,12 @@ class App extends Component {
         },
       body : JSON.stringify(employeeInformation)
     }).then((response) =>{
-      console.log(response);
+      return(response.json())
+    }).then(data =>{
+
+
+      //action add employee to reducers
+      console.log(data);
     })
   }
 

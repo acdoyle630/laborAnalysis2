@@ -2,4 +2,8 @@
 
 import {combineReducers} from 'redux';
 
-export default combineReducers({});
+import clockedInEmployees from './clockedInEmployees';
+
+export default combineReducers({
+  clockedInEmployees
+});
