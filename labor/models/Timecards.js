@@ -6,6 +6,11 @@ const router = express.Router();
 module.exports = function(sequelize, DataTypes) {
   var Timecards = sequelize.define("Timecards", {
 
+    employeeId : {
+      type: DataTypes.SMALLINT,
+      allowNull: false
+    },
+
     employeeName : {
      type: DataTypes.STRING,
      allowNull:false

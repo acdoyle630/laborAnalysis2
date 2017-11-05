@@ -12,7 +12,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      employeeId : "",
+      employeeId : null,
       employeeName : "",
       jobCode: "prep",
       storeNumber : "",
@@ -30,7 +30,6 @@ class App extends Component {
     }).then((response) =>{
       return response.json()
     }).then((data) =>{
-      console.log(data)
       this.props.loadClockedInEmployees(data)
     })
   }
@@ -39,22 +38,19 @@ class App extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log(this.props);
     this.clockIn(this.state)
   }
 
-  handleEmployeeNameChange = (event) =>{
-    console.log(this.state)
+  handleEmployeeIdChange = (event) =>{
     let clockInTime = new Date()
     this.setState({
-      employeeName: event.target.value,
+      employeeId: event.target.value,
       date : ("" + clockInTime.getFullYear()) + "" +("0" + clockInTime.getDate()).slice(-2) + "" + ("0" + (clockInTime.getMonth() + 1)).slice(-2),
       inTime : ("0" + clockInTime.getHours()).slice(-2) + "" + ("0" + clockInTime.getMinutes()).slice(-2)
     })
   }
 
   handleStoreNumberChange = (event) => {
-    console.log(this.state)
     let clockInTime = new Date()
     this.setState({
       storeNumber: event.target.value,
@@ -71,28 +67,38 @@ class App extends Component {
   }
 
   clockIn(employeeInformation){
-    //If employee name is not in reducers(clocked in employees)
+    //If employee id is not in reducers(clocked in employees)
+    let clockedIn = false;
+    for( var i = 0; i<this.props.clockedInEmployees.length; i++ ){
+      if(this.props.clockedInEmployees[i].employeeId === Number(employeeInformation.employeeId )){
+        clockedIn = true;
+      }
+    }
 
-    //Else clock out function
-    console.log(employeeInformation)
-    return fetch('/api/timecards', {
-      method: "POST",
-      credentials : "include",
-      headers:
-        {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-      body : JSON.stringify(employeeInformation)
-    }).then((response) =>{
-      return(response.json())
-    }).then(data =>{
+    if(clockedIn === false){
+
+      return fetch('/api/timecards', {
+        method: "POST",
+        credentials : "include",
+        headers:
+          {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+        body : JSON.stringify(employeeInformation)
+      }).then((response) =>{
+        return(response.json())
+      }).then(data =>{
 
 
-      //action add employee to reducers
-      // this.props.loadClockedInEmployees(data.id)
+        //action add employee to reducers
+        // this.props.loadClockedInEmployees(data.id)
       // console.log(data);
     })
+    }
+    else if(clockedIn === true){
+      console.log("clock that motherfucker out")
+    }
   }
 
   render() {
@@ -105,7 +111,7 @@ class App extends Component {
         </header>
       <div className = "clock in form">
         <form onSubmit = {this.handleSubmit} className = "clockInForm">
-          <input className = "employeeName" type="text" placeholder = "Employee Name" value = {this.employeeName} onChange = {this.handleEmployeeNameChange} />
+          <input className = "employeeID" type="number" placeholder = "Employee ID" value = {this.employeeId} onChange = {this.handleEmployeeIdChange} />
           <input className = "storeNumber" type="number" placeholder = "storeNumber" value = {this.storeNumber} onChange = {this.handleStoreNumberChange} />
           <button className="button" type="submit">
             Clock In
