@@ -18,7 +18,11 @@ timecards.post('/', ( req, res ) => {
 
 timecards.get('/clockedIn', (req, res) => {
   console.log('hit clocked in');
-  Timecards.all({raw: true})
+  Timecards.all({raw: true,
+    where: {
+      outTime: null
+    }
+  })
   .then((timecards) => {
     res.json(timecards);
   }).catch(err =>{

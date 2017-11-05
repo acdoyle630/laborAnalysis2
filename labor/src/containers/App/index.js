@@ -31,6 +31,7 @@ class App extends Component {
       return response.json()
     }).then((data) =>{
       console.log(data)
+      this.props.loadClockedInEmployees(data)
     })
   }
 
@@ -89,8 +90,8 @@ class App extends Component {
 
 
       //action add employee to reducers
-      this.props.loadClockedInEmployees(data.id)
-      console.log(data);
+      // this.props.loadClockedInEmployees(data.id)
+      // console.log(data);
     })
   }
 
