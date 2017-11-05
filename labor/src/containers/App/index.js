@@ -2,6 +2,8 @@
 
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import { connect } from 'react-redux';
+import { loadClockedInEmployees } from '../../action';
 import './styles.css';
 
 class App extends Component {
@@ -10,6 +12,7 @@ class App extends Component {
     super(props);
 
     this.state = {
+      employeeId : "",
       employeeName : "",
       jobCode: "prep",
       storeNumber : "",
@@ -20,10 +23,22 @@ class App extends Component {
     };
   }
 
+  componentWillMount(){
+    fetch('/api/timecards/clockedIn', {
+      method: "GET",
+      credentials: "include"
+    }).then((response) =>{
+      return response.json()
+    }).then((data) =>{
+      console.log(data)
+    })
+  }
+
   //on mount need to get all employees from reducers
 
   handleSubmit = (event) => {
     event.preventDefault();
+    console.log(this.props);
     this.clockIn(this.state)
   }
 
@@ -56,6 +71,7 @@ class App extends Component {
 
   clockIn(employeeInformation){
     //If employee name is not in reducers(clocked in employees)
+
     //Else clock out function
     console.log(employeeInformation)
     return fetch('/api/timecards', {
@@ -73,11 +89,13 @@ class App extends Component {
 
 
       //action add employee to reducers
+      this.props.loadClockedInEmployees(data.id)
       console.log(data);
     })
   }
 
   render() {
+    console.log(this.props.clockedInEmployees);
     return (
       <div className="App">
         <header className="App-header">
@@ -98,4 +116,24 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    clockedInEmployees : state.clockedInEmployees
+  };
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    loadClockedInEmployees: clockedInEmployees =>{
+      dispatch(loadClockedInEmployees(clockedInEmployees))
+    }
+  }
+}
+
+const ConnectedApp = connect(
+  mapStateToProps,
+  mapDispatchToProps
+  )(App);
+
+
+export default ConnectedApp;

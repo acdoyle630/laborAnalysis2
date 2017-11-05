@@ -16,4 +16,17 @@ timecards.post('/', ( req, res ) => {
     });
 });
 
+timecards.get('/clockedIn', (req, res) => {
+  console.log('hit clocked in');
+  Timecards.all({raw: true})
+  .then((timecards) => {
+    res.json(timecards);
+  }).catch(err =>{
+    res.send(err);
+  });
+});
+
+
+
 module.exports = timecards;
+

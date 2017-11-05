@@ -4,10 +4,16 @@ import {
   LOAD_CLOCKEDINEMPLOYEES
 } from '../action';
 
-const initialState = [];
+const initialState = {
+   arr : []
+  };
 
-const clockedInEmployees = (state = initialState, action) =>{  switch(action.type){
+const clockedInEmployees = (state = initialState, action) =>{
+  console.log('hit reducer ');
+  console.log(action.clockedInEmployees);
+  switch(action.type){
     case LOAD_CLOCKEDINEMPLOYEES:
+
       return [...action.clockedInEmployees];
 
       default: return state;
